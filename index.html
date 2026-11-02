@@ -167,6 +167,17 @@
   .demo { text-align: center; background: var(--xanh-nhat); border-radius: var(--bo); padding: 26px 18px; }
   .demo h3 { font-size: 20px; color: var(--xanh-dam); }
   .demo p { margin: 0 auto 18px; max-width: 560px; color: var(--chu-nhat); }
+  .lay-ma { max-width: 620px; margin: 34px auto 0; background: var(--the); border: 2px solid var(--vang); border-radius: var(--bo); padding: 24px 20px; text-align: center; box-shadow: var(--bong); }
+  .lay-ma h3 { font-size: 20px; color: var(--cam-dam); }
+  .lay-ma p { margin: 0 0 14px; color: var(--chu-nhat); font-size: 16px; }
+  .o-ma { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .o-ma input { font: inherit; flex: 1 1 200px; min-width: 0; padding: 12px 18px; border: 2px solid var(--vien); border-radius: 99px; background: #fff; color: var(--chu); }
+  .o-ma input:focus { outline: none; border-color: var(--cam); }
+  #kq-ma:not(:empty) { margin-top: 16px; }
+  .kq-dung { background: var(--xanh-nhat); border-radius: 16px; padding: 16px; }
+  .kq-dung b { display: block; color: var(--xanh-dam); margin-bottom: 10px; }
+  .kq-dung .nut { background: var(--xanh-dam); box-shadow: none; }
+  .kq-sai { color: var(--cam-dam); font-weight: 600; font-size: 16px; }
 
   /* Lịch lớp */
   .chon-khoi { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 22px; }
@@ -402,6 +413,15 @@
         <div class="the-tl ngang"><button type="button" data-anh="de-chi-tiet"><img src="anh/tai-lieu/de-chi-tiet.jpg" alt="Trang đầu Đề thi thử chi tiết số 1 lớp 12" width="800" height="1035" loading="lazy"></button><div><b>Đề thi thử soạn chi tiết</b><span>Dưới mỗi phần có bảng hướng dẫn dạng bài, gợi ý và từ vựng.</span></div></div>
         <div class="the-tl ngang"><button type="button" data-anh="tu-vung"><img src="anh/tai-lieu/tu-vung.jpg" alt="Trang từ vựng và bài tập từ vựng lớp 9 Unit 2" width="800" height="1035" loading="lazy"></button><div><b>Từ vựng + bài tập từ vựng</b><span>Bảng họ từ, cụm từ và bài tập từ vựng theo Unit.</span></div></div>
       </div>
+      <form class="lay-ma" id="lay-ma" autocomplete="off">
+        <h3>🔑 Nhận tài liệu PDF bằng mã</h3>
+        <p>Nhập mã Ms gửi (ví dụ: <b>tongon10</b>) để mở link tài liệu.</p>
+        <div class="o-ma">
+          <input id="nhap-ma" type="text" placeholder="Nhập mã tài liệu" aria-label="Mã tài liệu" autocapitalize="off" spellcheck="false">
+          <button class="nut" type="submit">Xem tài liệu</button>
+        </div>
+        <div id="kq-ma" aria-live="polite"></div>
+      </form>
     </div>
   </section>
 
@@ -466,6 +486,7 @@
 
 <a class="zalo-noi" href="#lien-he">💬 Nhắn Zalo</a>
 
+<script src="ma-tai-lieu.js"></script>
 <script>
   // ---- Feedback ----
   const feedback = [
@@ -514,6 +535,30 @@
     hop.showModal();
   }));
   document.getElementById("dong-phong-to").addEventListener("click", () => hop.close());
+
+  // ---- Tài liệu theo mã: link được mã hoá bằng chính mã (AES-GCM), danh sách trong ma-tai-lieu.js ----
+  const chuanMa = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/gi, "d").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const bam = async s => new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)));
+  const hex = b => [...b].map(x => x.toString(16).padStart(2, "0")).join("");
+  const tuB64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+  const kqMa = document.getElementById("kq-ma");
+  document.getElementById("lay-ma").addEventListener("submit", async e => {
+    e.preventDefault();
+    const ma = chuanMa(document.getElementById("nhap-ma").value);
+    kqMa.innerHTML = "";
+    if (!ma) return;
+    const muc = (window.MA_TAI_LIEU || {})[hex(await bam("id|" + ma)).slice(0, 16)];
+    if (!muc) { kqMa.innerHTML = '<p class="kq-sai">Mã chưa đúng. Em kiểm tra lại mã Ms gửi nhé!</p>'; return; }
+    try {
+      const khoa = await crypto.subtle.importKey("raw", await bam("gwe-tl|" + ma), "AES-GCM", false, ["decrypt"]);
+      const goc = await crypto.subtle.decrypt({ name: "AES-GCM", iv: tuB64(muc[0]) }, khoa, tuB64(muc[1]));
+      const { t, u } = JSON.parse(new TextDecoder().decode(goc));
+      const box = document.createElement("div"); box.className = "kq-dung";
+      const ten = document.createElement("b"); ten.textContent = "📄 " + t;
+      const a = document.createElement("a"); a.className = "nut"; a.href = u; a.target = "_blank"; a.rel = "noopener"; a.textContent = "Mở tài liệu PDF ↗";
+      box.append(ten, a); kqMa.appendChild(box);
+    } catch (err) { kqMa.innerHTML = '<p class="kq-sai">Không mở được tài liệu, em nhắn Ms nhé!</p>'; }
+  });
   hop.addEventListener("click", e => { if (e.target === hop) hop.close(); });
 
   // ---- Lịch lớp ----
