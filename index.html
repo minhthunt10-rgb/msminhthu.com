@@ -153,6 +153,20 @@
   .hop ul { margin: 0; padding-left: 20px; }
   .hop li { margin-bottom: 6px; }
 
+  /* Tài liệu & web luyện */
+  .nhom-tl { font-size: 20px; color: var(--xanh-dam); margin: 0 0 14px; }
+  .luoi-tl { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 30px; }
+  .the-tl { background: var(--the); border-radius: 18px; overflow: hidden; box-shadow: var(--bong); display: flex; flex-direction: column; }
+  .the-tl button { padding: 0; border: 0; background: var(--nen-2); cursor: zoom-in; display: block; }
+  .the-tl img { width: 100%; aspect-ratio: 3/4; object-fit: cover; object-position: top; }
+  .the-tl.ngang img { aspect-ratio: 4/3; }
+  .the-tl div { padding: 12px 14px 14px; }
+  .the-tl b { display: block; font-size: 16px; line-height: 1.35; }
+  .the-tl span { display: block; color: var(--chu-nhat); font-size: 14px; line-height: 1.5; margin-top: 4px; }
+  .demo { text-align: center; background: var(--xanh-nhat); border-radius: var(--bo); padding: 26px 18px; }
+  .demo h3 { font-size: 20px; color: var(--xanh-dam); }
+  .demo p { margin: 0 auto 18px; max-width: 560px; color: var(--chu-nhat); }
+
   /* Lịch lớp */
   .chon-khoi { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 22px; }
   .chon-khoi button {
@@ -207,6 +221,8 @@
     .ba-cot { grid-template-columns: repeat(3, 1fr); }
     .hai-cot { grid-template-columns: repeat(3, 1fr); }
     .feedback-luoi { columns: 3 220px; }
+    .luoi-tl { grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .luoi-tl.it { grid-template-columns: repeat(2, minmax(0, 340px)); justify-content: center; }
   }
   @media (min-width: 900px) {
     section { padding: 80px 0; }
@@ -243,6 +259,7 @@
       <a href="#tien-bo">Học sinh tiến bộ</a>
       <a href="#cau-chuyen">Câu chuyện</a>
       <a href="#cach-day">Chia sẻ kiến thức</a>
+      <a href="#tai-lieu">Tài liệu &amp; web luyện</a>
       <a href="#lich">Lịch lớp</a>
     </nav>
     <div class="nut-dau">
@@ -392,8 +409,34 @@
     </div>
   </section>
 
+  <!-- 7. Tài liệu & web luyện -->
+  <section id="tai-lieu" style="background:var(--nen-2)">
+    <div class="khung">
+      <h2>Tài liệu &amp; web luyện</h2>
+      <p class="phu-de">Tài liệu do Ms tự soạn theo sách Global Success, kèm web luyện tập làm trên điện thoại: chấm điểm ngay, có đáp án và giải thích từng câu. Bấm vào ảnh để xem to.</p>
+      <h3 class="nhom-tl">💻 Web luyện tập</h3>
+      <div class="luoi-tl" id="luoi-web">
+        <div class="the-tl"><button type="button" data-anh="unit3"><img src="anh/tai-lieu/unit3.jpg" alt="Trang luyện từ vựng Unit 3 lớp 12" width="600" height="1010" loading="lazy"></button><div><b>Từ vựng theo Unit</b><span>Bảng từ có phát âm, 4 bài luyện, giải thích chi tiết.</span></div></div>
+        <div class="the-tl"><button type="button" data-anh="de4"><img src="anh/tai-lieu/de4.jpg" alt="Trang luyện đề giữa kỳ I lớp 9" width="600" height="1010" loading="lazy"></button><div><b>Luyện đề kiểm tra</b><span>Đề giữa kỳ, cuối kỳ; nộp từng phần, xem điểm và nhận xét.</span></div></div>
+        <div class="the-tl"><button type="button" data-anh="wordform"><img src="anh/tai-lieu/wordform.jpg" alt="Trang luyện Word Form Chuyên Anh 9" width="600" height="1010" loading="lazy"></button><div><b>Word Form chuyên Anh</b><span>Mỗi mục 30 câu + 20 câu viết từ theo nghĩa.</span></div></div>
+        <div class="the-tl"><button type="button" data-anh="reading"><img src="anh/tai-lieu/reading.jpg" alt="Trang Reading Quest lớp 9" width="600" height="1010" loading="lazy"></button><div><b>Reading Quest</b><span>Đọc hiểu 5 chặng, giải mật mã ở cuối bài.</span></div></div>
+        <div class="the-tl"><button type="button" data-anh="speaking"><img src="anh/tai-lieu/speaking.jpg" alt="Trang luyện IELTS Speaking" width="600" height="1010" loading="lazy"></button><div><b>IELTS Speaking</b><span>Ghi âm câu trả lời, so với bài mẫu band 7.0.</span></div></div>
+      </div>
+      <h3 class="nhom-tl">📚 Tài liệu Ms soạn</h3>
+      <div class="luoi-tl it" id="luoi-doc">
+        <div class="the-tl ngang"><button type="button" data-anh="doc-tvnp"><img src="anh/tai-lieu/doc-tvnp.jpg" alt="Trang đầu tài liệu Từ vựng – Ngữ pháp lớp 9 Unit 2" width="760" height="892" loading="lazy"></button><div><b>Từ vựng – Ngữ pháp theo Unit</b><span>Bảng từ có phiên âm, ngữ pháp, bài tập theo dạng đề thi.</span></div></div>
+        <div class="the-tl ngang"><button type="button" data-anh="doc-de"><img src="anh/tai-lieu/doc-de.jpg" alt="Trang đầu đề kiểm tra giữa kỳ I lớp 9" width="760" height="892" loading="lazy"></button><div><b>Đề kiểm tra + đáp án</b><span>Đề giữa kỳ, cuối kỳ kèm đáp án tham khảo.</span></div></div>
+      </div>
+      <div class="demo">
+        <h3>✨ Làm thử một bài</h3>
+        <p>Bài demo: Từ vựng Unit 3 – Green Living (lớp 12). Học bảng từ, làm 4 bài và xem đáp án giải thích chi tiết ngay trên điện thoại.</p>
+        <a class="nut" href="https://khobaitap.msminhthu.com/grow-with-english-kit/unit3-lop12/" target="_blank" rel="noopener">Mở bài demo ↗</a>
+      </div>
+    </div>
+  </section>
+
   <!-- 8. Lịch lớp -->
-  <section id="lich" style="background:var(--nen-2)">
+  <section id="lich">
     <div class="khung">
       <h2>Lịch lớp</h2>
       <p class="phu-de">Chọn khối của con để xem các buổi học trong tuần.</p>
@@ -476,6 +519,11 @@
     luoi.querySelectorAll(".an").forEach(b => b.classList.remove("an"));
     nutXemThem.parentElement.remove();
   });
+  document.querySelectorAll("#tai-lieu button[data-anh]").forEach(b => b.addEventListener("click", () => {
+    const img = hop.querySelector("img");
+    img.src = `anh/tai-lieu/${b.dataset.anh}.jpg`; img.alt = b.querySelector("img").alt;
+    hop.showModal();
+  }));
   document.getElementById("dong-phong-to").addEventListener("click", () => hop.close());
   hop.addEventListener("click", e => { if (e.target === hop) hop.close(); });
 
