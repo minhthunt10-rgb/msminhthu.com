@@ -492,7 +492,7 @@
 
 <a class="zalo-noi" href="#lien-he">💬 Nhắn Zalo</a>
 
-<script src="ma-tai-lieu.js?v=2"></script>
+<script src="ma-tai-lieu.js?v=3"></script>
 <script>
   // ---- Feedback ----
   const feedback = [
@@ -553,17 +553,28 @@
     const ma = chuanMa(document.getElementById("nhap-ma").value);
     kqMa.innerHTML = "";
     if (!ma) return;
-    const muc = (window.MA_TAI_LIEU || {})[hex(await bam("id|" + ma)).slice(0, 16)];
-    if (!muc) { kqMa.innerHTML = '<p class="kq-sai">Mã chưa đúng. Em kiểm tra lại mã Ms gửi nhé!</p>'; return; }
+    const nut = e.submitter || document.querySelector("#lay-ma button");
+    nut.disabled = true; kqMa.innerHTML = '<p>Đang tìm tài liệu…</p>';
     try {
-      const khoa = await crypto.subtle.importKey("raw", await bam("gwe-tl|" + ma), "AES-GCM", false, ["decrypt"]);
-      const goc = await crypto.subtle.decrypt({ name: "AES-GCM", iv: tuB64(muc[0]) }, khoa, tuB64(muc[1]));
-      const { t, u } = JSON.parse(new TextDecoder().decode(goc));
+      let tl = null;
+      const muc = (window.MA_TAI_LIEU || {})[hex(await bam("id|" + ma)).slice(0, 16)];
+      if (muc) {
+        const khoa = await crypto.subtle.importKey("raw", await bam("gwe-tl|" + ma), "AES-GCM", false, ["decrypt"]);
+        tl = JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({ name: "AES-GCM", iv: tuB64(muc[0]) }, khoa, tuB64(muc[1]))));
+      } else if (window.SHEET_TAI_LIEU) {
+        // Mã cô tự thêm trong Google Sheet: Apps Script chỉ trả về đúng tài liệu khớp mã
+        const r = await (await fetch(window.SHEET_TAI_LIEU + "?ma=" + encodeURIComponent(ma))).json();
+        if (r && r.u) tl = r;
+      }
+      kqMa.innerHTML = "";
+      if (!tl || !/^https:\/\//.test(tl.u)) { kqMa.innerHTML = '<p class="kq-sai">Mã chưa đúng. Em kiểm tra lại mã Ms gửi nhé!</p>'; return; }
+      const { t, u } = tl;
       const box = document.createElement("div"); box.className = "kq-dung";
       const ten = document.createElement("b"); ten.textContent = "📄 " + t;
       const a = document.createElement("a"); a.className = "nut"; a.href = u; a.target = "_blank"; a.rel = "noopener"; a.textContent = "Mở tài liệu PDF ↗";
       box.append(ten, a); kqMa.appendChild(box);
-    } catch (err) { kqMa.innerHTML = '<p class="kq-sai">Không mở được tài liệu, em nhắn Ms nhé!</p>'; }
+    } catch (err) { kqMa.innerHTML = '<p class="kq-sai">Chưa tìm được tài liệu (mạng chậm?). Em thử lại hoặc nhắn Ms nhé!</p>'; }
+    finally { nut.disabled = false; }
   });
   hop.addEventListener("click", e => { if (e.target === hop) hop.close(); });
 
