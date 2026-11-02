@@ -65,10 +65,11 @@
     border-bottom: 1px solid var(--vien);
   }
   header.dau .khung { display: flex; align-items: center; justify-content: space-between; height: 64px; }
-  .thuong-hieu { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--chu); font-weight: 700; font-size: 15px; }
+  .thuong-hieu { display: flex; white-space: nowrap; align-items: center; gap: 10px; text-decoration: none; color: var(--chu); font-weight: 700; font-size: 15px; }
   .thuong-hieu img { width: 44px; height: 44px; }
   nav.menu { display: none; gap: 22px; }
-  nav.menu a { text-decoration: none; color: var(--chu); font-weight: 500; font-size: 15px; }
+  nav.menu a { text-decoration: none; color: var(--chu); font-weight: 500; font-size: 15px; white-space: nowrap; }
+  header.dau .khung { max-width: 1240px; }
   nav.menu a:hover { color: var(--cam-dam); }
   .nut-nho { padding: 9px 18px; font-size: 15px; box-shadow: none; white-space: nowrap; }
   .nut-dau { display: flex; gap: 10px; }
@@ -234,7 +235,7 @@
     .zalo-noi { display: none; }
     footer { padding-bottom: 28px; }
   }
-  @media (min-width: 1180px) {
+  @media (min-width: 1240px) {
     /* Menu chữ chỉ hiện khi đủ chỗ cho nút bên phải */
     nav.menu { display: flex; }
   }
